@@ -7,6 +7,21 @@ Python FastAPI service that ingests documents and answers questions with cited r
 - PostgreSQL
 - LLM (Haven't decided which one yet)
 
+## API endpoints (MVP)
+- Auth
+	- POST /auth/register — create user
+	- POST /auth/login — get JWT access (and optional refresh)
+	- POST /auth/refresh — refresh access token (if used)
+	- GET  /me — current user (requires Bearer token)
+- Documents
+	- POST /documents/upload — upload file (or presigned flow later)
+	- GET  /documents — list user documents
+	- DELETE /documents/{id} — delete document
+- QA
+	- POST /qa/query — ask question
+- Health
+	- GET /healthz — liveness check
+
 ## Development plan:
 - Setup repo, envs, project structure, etc
 - Implement basic API auth endpoints
