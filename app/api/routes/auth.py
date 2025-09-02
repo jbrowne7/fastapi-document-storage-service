@@ -46,7 +46,6 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
 
 @router.get("/me")
 def me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    # 1) Extract and verify JWT
     try:
         payload = decode_token(token)
     except jwt.ExpiredSignatureError:
