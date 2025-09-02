@@ -4,10 +4,17 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, EmailStr
 from app.db import crud
 from app.db.base import get_db
-
+from passlib.context import CryptContext
+import os, datetime as dt
+import jwt
 
 router = APIRouter(prefix="/auth")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+_pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+SECRET = os.getenv("JWT_SECRET", "x")
+ALGORITHM = os.getenv("JWT_ALG", "HS256")
+ACCESS_TOKEN_EXPIRES_MIN = int(os.getenv("ACCESS_TOKEN_EXPIRES_MIN", 60))
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -22,15 +29,32 @@ class RegisterRequest(BaseModel):
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = crud.get_user_by_email(db, request.email)
     
-    if not user:
+    if not user or not verify_password(request.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    return {"access_token": "todo.jwt", "token_type": "bearer"}
+    token = create_access_token(sub=str(user.id))
+
+    return {"access_token": token, "token_type": "bearer"}
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
     if crud.get_user_by_email(db, request.email):
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    user = crud.create_user(db, request.email, request.full_name, request.password)
+    user = crud.create_user(db, request.email, request.full_name, hash_password(request.password))
     return {"message": "Registration successful", "id": user.id, "email": user.email, "full_name": user.full_name}
+
+def hash_password(password: str) -> str:
+    return _pwd.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return _pwd.verify(plain_password, hashed_password)
+
+def create_access_token(sub: str):
+    now = dt.datetime.utcnow()
+    exp = now + dt.timedelta(minutes=ACCESS_TOKEN_EXPIRES_MIN)
+    payload = {"sub": sub, "iat": now, "exp": exp}
+    return jwt.encode(payload, SECRET, algorithm=ALGORITHM)
+
+def decode_token(token: str) -> dict:
+    return jwt.decode(token, SECRET, algorithms=[ALGORITHM])
