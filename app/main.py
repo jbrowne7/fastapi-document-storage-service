@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.api.routes.auth import router as auth_router
 
 import os
 import uvicorn
@@ -7,6 +8,9 @@ import uvicorn
 def create_app() -> FastAPI:
     app = FastAPI(title="rag-fastapi")
 
+    # Routers
+    app.include_router(auth_router)
+    
     @app.get("/healthz")
     def healthz():
         return {"status": "ok"}
