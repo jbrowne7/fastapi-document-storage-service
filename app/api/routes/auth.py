@@ -21,10 +21,16 @@ class RegisterRequest(BaseModel):
 @router.post("/login")
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = crud.get_user_by_email(db, request.email)
+    
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
     return {"access_token": "todo.jwt", "token_type": "bearer"}
 
 @router.post("/register")
-def register(request: RegisterRequest):
-    return {"message": "Registration successful"}
+def register(request: RegisterRequest, db: Session = Depends(get_db)):
+    if crud.get_user_by_email(db, request.email):
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    user = crud.create_user(db, request.email, request.full_name, request.password)
+    return {"message": "Registration successful", "id": user.id, "email": user.email, "full_name": user.full_name}
