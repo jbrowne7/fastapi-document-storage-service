@@ -26,4 +26,4 @@ jobs:
 
       - name: Run tests
         run: |
-          if [ -d tests ]; then pytest -q; else echo "No
+          if [ -d tests ]; then pytest -q; else echo "No"
