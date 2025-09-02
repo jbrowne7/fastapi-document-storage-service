@@ -34,7 +34,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
 
     token = create_access_token(sub=str(user.id))
 
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "expires_in": ACCESS_TOKEN_EXPIRES_MIN}
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
@@ -42,7 +42,25 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     user = crud.create_user(db, request.email, request.full_name, hash_password(request.password))
-    return {"message": "Registration successful", "id": user.id, "email": user.email, "full_name": user.full_name}
+    return {"message": "Registration successful", "email": user.email, "full_name": user.full_name}
+
+@router.get("/me")
+def me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    # 1) Extract and verify JWT
+    try:
+        payload = decode_token(token)
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    user = crud.get_user_by_id(db, payload["sub"])
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {"email": user.email, "full_name": user.full_name}
+
+# Helper functions
 
 def hash_password(password: str) -> str:
     return _pwd.hash(password)

@@ -6,6 +6,10 @@ def get_user_by_email(db: Session, email: str) -> User | None:
     user = select(User).where(User.email == email)
     return db.execute(user).scalar_one_or_none()
 
+def get_user_by_id(db: Session, id: str) -> User | None:
+    user = select(User).where(User.id == id)
+    return db.execute(user).scalar_one_or_none()
+
 def create_user(db: Session, email: str, full_name: str, password_hash: str) -> User:
     new_user = User(email=email, full_name=full_name, password_hash=password_hash)
     db.add(new_user)
