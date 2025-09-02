@@ -68,7 +68,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return _pwd.verify(plain_password, hashed_password)
 
 def create_access_token(sub: str):
-    now = dt.datetime.utcnow()
+    now = dt.datetime.now(dt.UTC)
     exp = now + dt.timedelta(minutes=ACCESS_TOKEN_EXPIRES_MIN)
     payload = {"sub": sub, "iat": now, "exp": exp}
     return jwt.encode(payload, SECRET, algorithm=ALGORITHM)
