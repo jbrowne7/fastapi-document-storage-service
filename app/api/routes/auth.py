@@ -9,6 +9,15 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class RegisterRequest(BaseModel):
+    email: EmailStr
+    password: str
+    full_name: str
+
 @router.post("/login")
 def login(request: LoginRequest):
     return {"message": "Login successful"}
+
+@router.post("/register")
+def register(request: RegisterRequest):
+    return {"message": "Registration successful"}
