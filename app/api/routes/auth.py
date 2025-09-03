@@ -1,20 +1,16 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel, EmailStr
+from app.api.deps import get_current_user
+from app.auth.jwt import create_access_token
 from app.db import crud
 from app.db.base import get_db
 from passlib.context import CryptContext
-import os, datetime as dt
-import jwt
+from app.core.config import settings
+
 
 router = APIRouter(prefix="/auth")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 _pwd = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-SECRET = os.getenv("JWT_SECRET", "x")
-ALGORITHM = os.getenv("JWT_ALG", "HS256")
-ACCESS_TOKEN_EXPIRES_MIN = int(os.getenv("ACCESS_TOKEN_EXPIRES_MIN", 60))
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -34,7 +30,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
 
     token = create_access_token(sub=str(user.id))
 
-    return {"access_token": token, "token_type": "bearer", "expires_in": ACCESS_TOKEN_EXPIRES_MIN}
+    return {"access_token": token, "token_type": "bearer", "expires_in": settings.ACCESS_TOKEN_EXPIRES_MIN}
 
 @router.post("/register")
 def register(request: RegisterRequest, db: Session = Depends(get_db)):
@@ -45,19 +41,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
     return {"message": "Registration successful", "email": user.email, "full_name": user.full_name}
 
 @router.get("/me")
-def me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    try:
-        payload = decode_token(token)
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    user = crud.get_user_by_id(db, payload["sub"])
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return {"email": user.email, "full_name": user.full_name}
+def me(current_user = Depends(get_current_user)):
+    return {"email": current_user.email, "full_name": current_user.full_name}
 
 # Helper functions
 
@@ -66,12 +51,3 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return _pwd.verify(plain_password, hashed_password)
-
-def create_access_token(sub: str):
-    now = dt.datetime.now(dt.UTC)
-    exp = now + dt.timedelta(minutes=ACCESS_TOKEN_EXPIRES_MIN)
-    payload = {"sub": sub, "iat": now, "exp": exp}
-    return jwt.encode(payload, SECRET, algorithm=ALGORITHM)
-
-def decode_token(token: str) -> dict:
-    return jwt.decode(token, SECRET, algorithms=[ALGORITHM])
