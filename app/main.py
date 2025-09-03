@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as documents_router
-
-import os
-import uvicorn
+from app.services.storage import ensure_bucket
+from app.core.config import settings
 
 
 def create_app() -> FastAPI:
+
     app = FastAPI(title="rag-fastapi")
 
     # Routers
@@ -23,4 +23,5 @@ def create_app() -> FastAPI:
 
     return app
 
+ensure_bucket(settings.S3_BUCKET)
 app = create_app()
