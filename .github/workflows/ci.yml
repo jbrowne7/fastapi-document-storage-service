@@ -15,9 +15,28 @@ jobs:
           POSTGRES_DB: test_db
         ports:
           - 5432:5432
-    
+
+      localstack:
+        image: localstack/localstack
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: s3
+          DEFAULT_REGION: eu-west-1
+
     env:
-      DATABASE_URL: postgresql+psycopg2://user:password@localhost:5432/test_db 
+      APP_NAME: rag-fastapi
+      DATABASE_URL: postgresql+psycopg2://user:password@localhost:5432/test_db
+      JWT_SECRET: secret
+      JWT_ALG: HS256
+      ACCESS_TOKEN_EXPIRES_MIN: 60
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      S3_BUCKET: rag-documents
+      S3_REGION: eu-west-1
+      S3_ENDPOINT_URL: http://localhost:4566
+      S3_USE_SSL: true
+      S3_FORCE_PATH_STYLE: true
 
     steps:
       - uses: actions/checkout@v4
