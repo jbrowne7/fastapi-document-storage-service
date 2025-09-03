@@ -14,8 +14,6 @@ class Settings(BaseSettings):
     S3_BUCKET: str = Field(..., description="S3 bucket name")
     S3_REGION: str = Field(..., description="S3 region")
     S3_ENDPOINT_URL: str = Field(..., description="S3 endpoint URL")
-    S3_USE_SSL: bool = Field(..., description="Use SSL for S3")
-    S3_FORCE_PATH_STYLE: bool = Field(..., description="Force path-style addressing for S3")
 
     model_config = SettingsConfigDict(
         env_file=".env",
