@@ -27,10 +27,8 @@ def ensure_bucket(bucket_name: str) -> None:
     location = {'LocationConstraint': settings.S3_REGION}
     s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration=location)
 
-# def upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj: BinaryIO) -> dict:
-#     s3 = s3_client()
-#     try:
-#         response = s3.upload_fileobj(fileobj, settings.S3_BUCKET, object_name)
-#     except ClientError as e:
-#         return False
-#     return True
+def upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj: BinaryIO) -> dict:
+    s3 = s3_client()
+    key = f"users/{user_id}/docs/{doc_id}/{filename}"
+    s3.upload_fileobj(Fileobj=fileobj, Bucket=settings.S3_BUCKET, Key=key)
+    return {"bucket": settings.S3_BUCKET, "key": key}
