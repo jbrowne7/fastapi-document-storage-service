@@ -4,8 +4,6 @@ from app.api.deps import get_current_user
 from app.auth.jwt import decode_token
 from app.db import crud
 
-import jwt
-
 
 router = APIRouter(prefix="/documents")
 
