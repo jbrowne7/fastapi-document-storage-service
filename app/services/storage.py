@@ -53,5 +53,16 @@ def list_user_objects(user_id: str) -> list[dict]:
                     "size": obj['Size'],
                     "storage_class": obj['StorageClass'],
                 })
-                
+
     return objects
+
+def delete_user_object(user_id: str, doc_id: str, filename: str) -> int:
+    key = f"users/{user_id}/docs/{doc_id}/{filename}"
+    try:
+        s3_client().delete_object(Bucket=settings.S3_BUCKET, Key=key)
+        return True
+    except ClientError as e:
+        code = e.response.get("Error", {}).get("Code")
+        if code in ("NoSuchKey", "404"):
+            return False
+        raise
