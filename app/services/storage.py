@@ -31,7 +31,7 @@ def upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj: BinaryIO) 
     s3 = s3_client()
     key = f"users/{user_id}/docs/{doc_id}/{filename}"
     s3.upload_fileobj(Fileobj=fileobj, Bucket=settings.S3_BUCKET, Key=key)
-    return {"bucket": settings.S3_BUCKET, "key": key}
+    return {"bucket": settings.S3_BUCKET, "key": key, "doc_id": doc_id}
 
 def list_user_objects(user_id: str) -> list[dict]:
     s3 = s3_client()
@@ -44,7 +44,7 @@ def list_user_objects(user_id: str) -> list[dict]:
         if 'Contents' in page:
             for obj in page['Contents']:
                 path = PurePosixPath(obj['Key'])
-                doc_id = path.parts[2]
+                doc_id = path.parts[3]
                 filename = path.name
                 objects.append({
                     "doc_id": doc_id,
