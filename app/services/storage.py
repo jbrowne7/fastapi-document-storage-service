@@ -1,9 +1,11 @@
+import boto3
+
 from typing import BinaryIO, Optional
 from pathlib import PurePosixPath
-import boto3
-from botocore.config import Config
 from botocore.exceptions import ClientError
 from app.core.config import settings
+
+class DuplicateFilenameError(Exception): ...
 
 _s3 = None
 
@@ -27,8 +29,22 @@ def ensure_bucket(bucket_name: str) -> None:
     location = {'LocationConstraint': settings.S3_REGION}
     s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration=location)
 
+def _find_user_key_by_filename(user_id: str, filename: str) -> Optional[str]:
+    s3 = s3_client()
+    prefix = f"users/{user_id}/docs/"
+    paginator = s3.get_paginator("list_objects_v2")
+    for page in paginator.paginate(Bucket=settings.S3_BUCKET, Prefix=prefix):
+        for obj in page.get("Contents", []):
+            key = obj["Key"]
+            if key.endswith("/") or PurePosixPath(key).name != filename:
+                continue
+            return key
+    return None
+
 def upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj: BinaryIO) -> dict:
     s3 = s3_client()
+    if _find_user_key_by_filename(user_id, filename):
+        raise DuplicateFilenameError(filename)
     key = f"users/{user_id}/docs/{doc_id}/{filename}"
     s3.upload_fileobj(Fileobj=fileobj, Bucket=settings.S3_BUCKET, Key=key)
     return {"bucket": settings.S3_BUCKET, "key": key, "doc_id": doc_id}
@@ -56,13 +72,9 @@ def list_user_objects(user_id: str) -> list[dict]:
 
     return objects
 
-def delete_user_object(user_id: str, doc_id: str, filename: str) -> int:
-    key = f"users/{user_id}/docs/{doc_id}/{filename}"
-    try:
-        s3_client().delete_object(Bucket=settings.S3_BUCKET, Key=key)
-        return True
-    except ClientError as e:
-        code = e.response.get("Error", {}).get("Code")
-        if code in ("NoSuchKey", "404"):
-            return False
-        raise
+def delete_user_object(user_id: str, filename: str) -> dict:
+    key = _find_user_key_by_filename(user_id, filename)
+    if not key:
+        return {"message": "File not found"}
+    s3_client().delete_object(Bucket=settings.S3_BUCKET, Key=key)
+    return {"message": "File deleted"}
