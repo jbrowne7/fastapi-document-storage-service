@@ -6,6 +6,7 @@ from botocore.exceptions import ClientError
 from app.core.config import settings
 
 class DuplicateFilenameError(Exception): ...
+class ObjectNotFoundError(Exception): ...
 
 _s3 = None
 
@@ -72,9 +73,9 @@ def list_user_objects(user_id: str) -> list[dict]:
 
     return objects
 
-def delete_user_object(user_id: str, filename: str) -> dict:
+def delete_user_object(user_id: str, filename: str) -> None:
     key = _find_user_key_by_filename(user_id, filename)
     if not key:
-        return {"message": "File not found"}
+        raise ObjectNotFoundError(filename)
     s3_client().delete_object(Bucket=settings.S3_BUCKET, Key=key)
-    return {"message": "File deleted"}
+    

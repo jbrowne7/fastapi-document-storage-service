@@ -1,6 +1,6 @@
 from fastapi import UploadFile, APIRouter, Depends, HTTPException
 from app.api.deps import get_current_user
-from app.services.storage import upload_fileobj, list_user_objects, delete_user_object, DuplicateFilenameError
+from app.services.storage import upload_fileobj, list_user_objects, delete_user_object, DuplicateFilenameError, ObjectNotFoundError
 from uuid import uuid4
 
 
@@ -24,6 +24,6 @@ def list_documents(current_user = Depends(get_current_user)):
 def delete_document(filename: str, current_user = Depends(get_current_user)):
     try:
         delete_user_object(str(current_user.id), filename)
-        return {"message": "File deleted"}
-    except FileNotFoundError:
+    except ObjectNotFoundError:
         raise HTTPException(status_code=404, detail={"code": "file not found", "filename": filename})
+    return
