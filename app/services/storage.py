@@ -32,3 +32,26 @@ def upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj: BinaryIO) 
     key = f"users/{user_id}/docs/{doc_id}/{filename}"
     s3.upload_fileobj(Fileobj=fileobj, Bucket=settings.S3_BUCKET, Key=key)
     return {"bucket": settings.S3_BUCKET, "key": key}
+
+def list_user_objects(user_id: str) -> list[dict]:
+    s3 = s3_client()
+    prefix = f"users/{user_id}/docs/"
+    paginator = s3.get_paginator('list_objects_v2')
+    page_iterator = paginator.paginate(Bucket=settings.S3_BUCKET, Prefix=prefix)
+
+    objects = []
+    for page in page_iterator:
+        if 'Contents' in page:
+            for obj in page['Contents']:
+                path = PurePosixPath(obj['Key'])
+                doc_id = path.parts[2]
+                filename = path.name
+                objects.append({
+                    "doc_id": doc_id,
+                    "filename": filename,
+                    "last_modified": obj['LastModified'],
+                    "size": obj['Size'],
+                    "storage_class": obj['StorageClass'],
+                })
+                
+    return objects
