@@ -32,6 +32,7 @@ def _clear_auth_override(client: TestClient):
 """
 For this test suite, we mock out the actual S3 upload to avoid external dependencies, we do
 this using monkeypatching to replace the upload_fileobj function with a fake one.
+- for the unauthorized tests we don't call _set_auth_override so should be unauthorized
 """
 def test_upload_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     _set_auth_override(client)
@@ -57,6 +58,20 @@ def test_upload_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     assert data["bucket"] == "rag-documents"
     assert data["key"].endswith("/hello.txt")
     assert "doc_id" in data and isinstance(data["doc_id"], str)
+
+def test_upload_unauthorized(client: TestClient):
+    files = {"file": ("any.txt", io.BytesIO(b"data"), "text/plain")}
+    resp = client.post("/documents/upload", files=files)
+    assert resp.status_code in (401, 403), resp.text
+
+def test_upload_missing_file_returns_422(client: TestClient):
+    _set_auth_override(client)
+
+    resp = client.post("/documents/upload", files={}) 
+
+    _clear_auth_override(client)
+
+    assert resp.status_code == 422, resp.text
 
 def test_upload_duplicate_filename(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     _set_auth_override(client)
@@ -102,6 +117,10 @@ def test_list_documents(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     assert len(data) == 2
     assert [d["filename"] for d in data] == ["a.txt", "b.pdf"]
 
+def test_list_unauthorized(client: TestClient):
+    resp = client.get("/documents/list")
+    assert resp.status_code in (401, 403), resp.text
+
 def test_delete_documents_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     _set_auth_override(client)
 
@@ -118,3 +137,29 @@ def test_delete_documents_success(client: TestClient, monkeypatch: pytest.Monkey
 
     assert resp.status_code in (200, 204), resp.text
     assert called == {"user_id": "user-123", "filename": "sample.txt"}
+
+def test_delete_unauthorized(client: TestClient):
+    resp = client.delete("/documents/delete/any.txt")
+    assert resp.status_code in (401, 403), resp.text
+
+def test_delete_document_not_found(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    _set_auth_override(client)
+
+    def fake_delete_user_object(user_id: str, filename: str):
+        raise docs_mod.ObjectNotFoundError(filename)
+
+    monkeypatch.setattr(docs_mod, "delete_user_object", fake_delete_user_object, raising=True)
+
+    resp = client.delete("/documents/delete/missing.txt")
+
+    _clear_auth_override(client)
+
+    assert resp.status_code == 404, resp.text
+    body = resp.json()
+
+    assert "detail" in body
+    detail = body["detail"]
+    if isinstance(detail, dict):
+        assert detail.get("code") in ("file not found", "not_found")
+        assert detail.get("filename") == "missing.txt"
+
