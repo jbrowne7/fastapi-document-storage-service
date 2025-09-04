@@ -7,7 +7,6 @@
   - `fix/<short-name>` for bug fixes
 - Flow:
   - feature/fix → PR into `dev`
-- Rebase `dev` often; keep PRs small.
 
 ## Commits
 - Format: `<type>(optional scope): <summary>`
@@ -20,19 +19,17 @@
 - Target `dev` for feature/fix PRs; target `main` only for release/hotfix PRs.
 - Prefer “Squash and merge”. PR title becomes the commit on the base branch (use Conventional Commit style).
 - Link issues in the description using `Fixes #123` or `Closes #123`.
-- Keep PRs focused (≤ ~300 lines). Add tests and docs updates.
-- Pass checks: lint/type/tests before requesting review.
 
 ## Issues
 - Use templates:
   - Bug: expected vs actual, logs
   - Feature: problem, proposal
-- Labels: `type:bug`, `type:feature`, `area:api|auth|ingestion|vector|qa`
+- Labels: `type:bug`, `type:feature`, :`type:testing`
 
 ## Releases
 - Semantic Versioning: `MAJOR.MINOR.PATCH`
 - Tag releases (e.g., `v0.1.0`) and generate notes from merged PRs.
 
 ## Code style
-- Python 3.11+, FastAPI, Pydantic v2
+- Python 3.11+
 - Tests: pytest
