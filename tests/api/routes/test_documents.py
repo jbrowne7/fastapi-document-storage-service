@@ -77,3 +77,44 @@ def test_upload_duplicate_filename(client: TestClient, monkeypatch: pytest.Monke
     detail = body["detail"]
     assert detail.get("code") == "file already exists"
     assert detail.get("filename") == "dup.txt"
+
+def test_list_documents(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    _set_auth_override(client)
+
+    items = [
+        {"doc_id": "d1", "filename": "a.txt", "size": 10, "storage_class": "STANDARD"},
+        {"doc_id": "d2", "filename": "b.pdf", "size": 20, "storage_class": "STANDARD"},
+    ]
+
+    def fake_list_user_objects(user_id: str):
+        assert user_id == "user-123"
+        return items
+
+    monkeypatch.setattr(docs_mod, "list_user_objects", fake_list_user_objects, raising=True)
+
+    resp = client.get("/documents/list")
+
+    _clear_auth_override(client)
+
+    assert resp.status_code == 200, resp.text
+    data = resp.json()
+    assert isinstance(data, list)
+    assert len(data) == 2
+    assert [d["filename"] for d in data] == ["a.txt", "b.pdf"]
+
+def test_delete_documents_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    _set_auth_override(client)
+
+    called = {}
+    def fake_delete_user_object(user_id: str, filename: str):
+        called["user_id"] = user_id
+        called["filename"] = filename
+
+    monkeypatch.setattr(docs_mod, "delete_user_object", fake_delete_user_object, raising=True)
+
+    resp = client.delete("/documents/delete/sample.txt")
+
+    _clear_auth_override(client)
+
+    assert resp.status_code in (200, 204), resp.text
+    assert called == {"user_id": "user-123", "filename": "sample.txt"}

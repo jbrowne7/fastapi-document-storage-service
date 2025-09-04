@@ -21,11 +21,11 @@ def test_register_duplicate_email_conflict(client):
     r1 = client.post("/auth/register", json={"email": email, "password": pwd, "full_name": "Tester"})
     assert r1.status_code in (200, 201), r1.text
     r2 = client.post("/auth/register", json={"email": email, "password": pwd, "full_name": "Tester"})
-    assert r2.status_code in (400, 409), r2.text  # expect 409 if you implemented conflict
+    assert r2.status_code in (400, 409), r2.text
 
 def test_register_invalid_email_422(client):
     r = client.post("/auth/register", json={"email": "not-an-email", "password": "Passw0rd!234"})
-    assert r.status_code == 422, r.text  # Pydantic validation
+    assert r.status_code == 422, r.text
 
 def test_login_unknown_user_401(client):
     r = client.post("/auth/login", json={"email": f"nouser_{uuid.uuid4().hex}@example.com", "password": "Passw0rd!234"})
