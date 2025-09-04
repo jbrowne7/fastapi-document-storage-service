@@ -29,6 +29,10 @@ def _clear_auth_override(client: TestClient):
     app.dependency_overrides.pop(deps_mod.get_current_user, None)
 
 
+"""
+For this test suite, we mock out the actual S3 upload to avoid external dependencies, we do
+this using monkeypatching to replace the upload_fileobj function with a fake one.
+"""
 def test_upload_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     _set_auth_override(client)
 
@@ -53,3 +57,23 @@ def test_upload_success(client: TestClient, monkeypatch: pytest.MonkeyPatch):
     assert data["bucket"] == "rag-documents"
     assert data["key"].endswith("/hello.txt")
     assert "doc_id" in data and isinstance(data["doc_id"], str)
+
+def test_upload_duplicate_filename(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    _set_auth_override(client)
+
+    def fake_upload_fileobj(user_id: str, doc_id: str, filename: str, fileobj):
+        raise docs_mod.DuplicateFilenameError(filename)
+
+    monkeypatch.setattr(docs_mod, "upload_fileobj", fake_upload_fileobj, raising=True)
+
+    files = {"file": ("dup.txt", io.BytesIO(b"bytes"), "text/plain")}
+    response = client.post("/documents/upload", files=files)
+
+    _clear_auth_override(client)
+
+    assert response.status_code in (400, 409)
+    body = response.json()
+    assert "detail" in body and isinstance(body["detail"], dict)
+    detail = body["detail"]
+    assert detail.get("code") == "file already exists"
+    assert detail.get("filename") == "dup.txt"
