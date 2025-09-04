@@ -1,8 +1,10 @@
 import time
+from fastapi import FastAPI
 import pytest
 import os, sys
 from fastapi.testclient import TestClient
 from sqlalchemy import text
+
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT not in sys.path:
@@ -22,7 +24,6 @@ def setup_db():
         except Exception:
             time.sleep(1)
 
-    # fresh schema for tests
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     yield
