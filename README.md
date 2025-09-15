@@ -7,6 +7,7 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 - [Features](#features)
 - [Development plan](#development-plan)
 - [Run locally](#run-locally)
+- [API Testing with Postman](#api-testing-with-postman)
 
 ## Stack
 - Python
