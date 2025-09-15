@@ -4,6 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+print("Alembic connecting to:", context.config.get_main_option("sqlalchemy.url"))
 
 from app.db import models
 from app.db.base import Base
