@@ -14,7 +14,13 @@ def s3_client():
     global _s3
     if _s3: return _s3
 
-    _s3_client = boto3.client('s3', region_name=settings.S3_REGION, endpoint_url=settings.S3_ENDPOINT_URL)
+    _s3_client = boto3.client(
+        's3',
+        region_name=settings.S3_REGION,
+        endpoint_url=settings.S3_ENDPOINT_URL,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
     _s3 = _s3_client
     
     return _s3

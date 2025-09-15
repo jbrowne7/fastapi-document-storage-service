@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     AWS_ACCESS_KEY_ID: str = Field("test", description="AWS access key ID")
     AWS_SECRET_ACCESS_KEY: str = Field("test", description="AWS secret access key")
     S3_BUCKET: str = Field("fastapi-documents", description="S3 bucket name")
-    S3_REGION: str = Field("xx-xxxx-1", description="S3 region")
+    S3_REGION: str = Field("eu-west-1", description="S3 region")
     S3_ENDPOINT_URL: str = Field("http://localhost:4566", description="S3 endpoint URL")
     S3_USE_SSL: bool = Field(False, description="Use SSL for S3")
     S3_FORCE_PATH_STYLE: bool = Field(True, description="Force path-style addressing for S3")
