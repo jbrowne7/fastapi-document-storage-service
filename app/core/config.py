@@ -1,21 +1,25 @@
 from __future__ import annotations
 import sys
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, ValidationError
 
 class Settings(BaseSettings):
-    APP_NAME: str = Field(..., description="Application name")
-    DATABASE_URL: str = Field(..., description="SQLAlchemy connection URL")
-    JWT_SECRET: str = Field(..., min_length=1, description="JWT signing secret")
-    JWT_ALG: str = Field(..., description="JWT algorithm, e.g. HS256")
-    ACCESS_TOKEN_EXPIRES_MIN: int = Field(..., gt=0, description="Access token TTL (minutes)")
-    AWS_ACCESS_KEY_ID: str = Field(..., description="AWS access key ID")
-    AWS_SECRET_ACCESS_KEY: str = Field(..., description="AWS secret access key")
-    S3_BUCKET: str = Field(..., description="S3 bucket name")
-    S3_REGION: str = Field(..., description="S3 region")
-    S3_ENDPOINT_URL: str = Field(..., description="S3 endpoint URL")
-    S3_USE_SSL: bool = Field(..., description="Use SSL for S3")
-    S3_FORCE_PATH_STYLE: bool = Field(..., description="Force path-style addressing for S3")
+    APP_NAME: str = Field("fastapi-document-storage-service", description="Application name")
+    DATABASE_URL: str = Field(
+        "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_docstore",
+        description="SQLAlchemy connection URL"
+    )
+    JWT_SECRET: str = Field("changeme", min_length=1, description="JWT signing secret")
+    JWT_ALG: str = Field("HS256", description="JWT algorithm, e.g. HS256")
+    ACCESS_TOKEN_EXPIRES_MIN: int = Field(60, gt=0, description="Access token TTL (minutes)")
+    AWS_ACCESS_KEY_ID: str = Field("test", description="AWS access key ID")
+    AWS_SECRET_ACCESS_KEY: str = Field("test", description="AWS secret access key")
+    S3_BUCKET: str = Field("fastapi-documents", description="S3 bucket name")
+    S3_REGION: str = Field("xx-xxxx-1", description="S3 region")
+    S3_ENDPOINT_URL: str = Field("http://localhost:4566", description="S3 endpoint URL")
+    S3_USE_SSL: bool = Field(False, description="Use SSL for S3")
+    S3_FORCE_PATH_STYLE: bool = Field(True, description="Force path-style addressing for S3")
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -23,7 +27,22 @@ class Settings(BaseSettings):
     )
 
 try:
-    settings = Settings()  # type: ignore
+    settings = Settings() # type: ignore
+
+    # Check for and warn if using default environment variables
+    defaults = Settings.model_fields
+    used_defaults = []
+    for field, meta in defaults.items():
+        env_key = meta.validation_alias if isinstance(meta.validation_alias, str) else field
+        env_val = os.getenv(env_key)
+        if env_val is None and getattr(settings, field) == meta.default:
+            used_defaults.append(field)
+    if used_defaults:
+        print(
+            f"WARNING: The following settings are using default values: {', '.join(used_defaults)}.\n"
+            "Please set them in your .env file for production.",
+            file=sys.stderr
+        )
 
 except ValidationError as e:
     print("Configuration error: missing/invalid environment variables.", file=sys.stderr)
