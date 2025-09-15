@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "32f45490-66cb-4746-a813-7e4cf0636d9f",
+		"name": "My Collection",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48172399",
+		"_collection_link": "https://jbrowne7-5683294.postman.co/workspace/J's-Workspace~8a26b59d-3464-4393-8d88-5a162d86548d/collection/48172399-32f45490-66cb-4746-a813-7e4cf0636d9f?action=share&source=collection_link&creator=48172399"
+	},
+	"item": [
+		{
+			"name": "/auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"full_name\": \"test user\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/me",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/me",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/documents/list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/documents/list",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"documents",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/documents/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/documents/delete/f9bd22da-0cc9-4625-bae8-878602eef237",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"documents",
+						"delete",
+						"f9bd22da-0cc9-4625-bae8-878602eef237"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/documents/upload",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/documents/upload",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"documents",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

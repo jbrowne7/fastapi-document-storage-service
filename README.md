@@ -79,3 +79,10 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 	```
 
 5. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) and check `/healthz` or the docs at `/docs`.
+
+## API Testing with Postman
+
+A ready-to-use Postman collection is provided in [`postman/fastapi-docstore.postman_collection.json`](postman/fastapi-docstore.postman_collection.json).
+
+- Import this collection into Postman to try out all API endpoints.
+- Update the environment variables (such as base URL and JWT token) as needed for your setup.
