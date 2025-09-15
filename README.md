@@ -42,6 +42,15 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 - Deploy: Docker Compose for dev; cloud Postgres + object storage
 
 ## Run locally
+
+> The `.env.example` and `docker-compose.yml` files are provided **only for local development and testing**.  
+> **Do not use these files for production deployments.**  
+> If deploying create your own `.env` and `docker-compose.yml` with secure, production-ready settings.
+
+1. **Copy sample .env file to .env**
+    ```bash
+    cp .env.sample .env
+    ```
 1. **Start dependencies with Docker Compose**
 
     ```bash
