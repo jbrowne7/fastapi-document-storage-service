@@ -1,3 +1,8 @@
+# -----------------------------------------------------------------------------
+# SAMPLE DOCKER COMPOSE FILE FOR LOCAL DEVELOPMENT AND TESTING ONLY
+# DO NOT USE IN PRODUCTION OR FOR DEPLOYING SENSITIVE DATA
+# -----------------------------------------------------------------------------
+
 version: "3.8"
 services:
   postgres:
