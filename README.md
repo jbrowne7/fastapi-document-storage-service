@@ -50,19 +50,19 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 
     This will start both Postgres and LocalStack S3 locally.
 
-2. **Run database migrations**:
-
-    ```bash
-    alembic upgrade head
-    ```
-
-3. **Create a virtual env and install dependencies**
+2. **Create a virtual env and install dependencies**
    
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
     pip install -U pip
     pip install -r requirements.txt
+    ```
+
+3. **Run database migrations**:
+
+    ```bash
+    alembic upgrade head
     ```
 
 4. **Start the API**
