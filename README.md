@@ -48,8 +48,6 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
     docker compose up -d
     ```
 
-    This will start both Postgres and LocalStack S3 locally.
-
 2. **Create a virtual env and install dependencies**
    
     ```bash
