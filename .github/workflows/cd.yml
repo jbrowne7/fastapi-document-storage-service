@@ -1,9 +1,6 @@
 name: Push Docker Image to AWS ECR
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 env:
   AWS_REGION: eu-north-1
