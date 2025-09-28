@@ -26,6 +26,7 @@ jobs:
 
       - name: Build, tag, and push image to ECR
         run: |
+          echo $REGISTRY
           IMAGE_TAG=${{ github.sha }}
           docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
           docker tag $ECR_REPOSITORY:$IMAGE_TAG ${{ steps.amazon-ecr-login.outputs.registry }}/$ECR_REPOSITORY:$IMAGE_TAG
