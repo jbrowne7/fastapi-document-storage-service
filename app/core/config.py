@@ -31,8 +31,7 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
-    def __init__(self, **values):
-        super().__init__(**values)
+    def setDatabaseURL(self):
         self.DATABASE_URL = (
             f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
             f"@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
@@ -40,6 +39,7 @@ class Settings(BaseSettings):
 
 try:
     settings = Settings() # type: ignore
+    settings.setDatabaseURL()
 
     # Check for and warn if using default environment variables
     defaults = Settings.model_fields

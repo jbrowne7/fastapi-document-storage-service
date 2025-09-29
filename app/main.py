@@ -24,8 +24,5 @@ def create_app() -> FastAPI:
 
     return app
 
-print(settings.DATABASE_URL)
-print(settings.DATABASE_HOST)
-sys.exit(0)
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
