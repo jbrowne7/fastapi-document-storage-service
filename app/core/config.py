@@ -3,6 +3,7 @@ import sys
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, ValidationError
+from typing import ClassVar
 
 class Settings(BaseSettings):
     APP_NAME: str = Field("fastapi-document-storage-service", description="Application name")
@@ -24,9 +25,9 @@ class Settings(BaseSettings):
     DATABASE_NAME: str = Field("fastapi_docstore", description="Database name")
     DATABASE_URL: str = "" #db url is set in constructor
 
-
+    env_file: ClassVar[str | None] = ".env" if os.getenv("ENV", "local") == "local" else None
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=env_file,
         env_file_encoding="utf-8",
     )
 

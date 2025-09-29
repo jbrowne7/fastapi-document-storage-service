@@ -27,6 +27,9 @@ import os, sys
 print("ECS ENVIRONMENT VARIABLES:")
 for key in ["DATABASE_USER", "DATABASE_PASSWORD", "DATABASE_HOST", "DATABASE_PORT", "DATABASE_NAME"]:
     print(f"{key}: {os.getenv(key)}")
+
+print("ECS ENVIRONMENT VARIABLES PYDANTIC")
+print(settings.DATABASE_HOST)
 sys.exit(0)
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
