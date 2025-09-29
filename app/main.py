@@ -3,6 +3,7 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as documents_router
 from app.services.storage import ensure_bucket
 from app.core.config import settings
+import sys
 
 
 def create_app() -> FastAPI:
@@ -23,5 +24,8 @@ def create_app() -> FastAPI:
 
     return app
 
+print(settings.DATABASE_URL)
+print(settings.DATABASE_HOST)
+sys.exit(0)
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
