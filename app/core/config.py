@@ -6,10 +6,6 @@ from pydantic import Field, ValidationError
 
 class Settings(BaseSettings):
     APP_NAME: str = Field("fastapi-document-storage-service", description="Application name")
-    DATABASE_URL: str = Field(
-        "postgresql+psycopg2://postgres:postgres@localhost:5432/fastapi_docstore",
-        description="SQLAlchemy connection URL"
-    )
     JWT_SECRET: str = Field("changeme", min_length=1, description="JWT signing secret")
     JWT_ALG: str = Field("HS256", description="JWT algorithm, e.g. HS256")
     ACCESS_TOKEN_EXPIRES_MIN: int = Field(60, gt=0, description="Access token TTL (minutes)")
@@ -21,10 +17,24 @@ class Settings(BaseSettings):
     S3_USE_SSL: bool = Field(False, description="Use SSL for S3")
     S3_FORCE_PATH_STYLE: bool = Field(True, description="Force path-style addressing for S3")
 
+    DATABASE_USER: str = Field("postgres", description="Database username")
+    DATABASE_PASSWORD: str = Field("postgres", description="Database password")
+    DATABASE_HOST: str = Field("localhost", description="Database host")
+    DATABASE_PORT: str = Field("5432", description="Database port")
+    DATABASE_NAME: str = Field("fastapi_docstore", description="Database name")
+    DATABASE_URL: str = "" #db url is set in constructor
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
     )
+
+    def __init__(self, **values):
+        super().__init__(**values)
+        self.DATABASE_URL = (
+            f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
+            f"@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
+        )
 
 try:
     settings = Settings() # type: ignore
