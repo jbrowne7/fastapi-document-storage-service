@@ -16,7 +16,7 @@ def s3_client():
     if _s3: return _s3
 
     # If deploying in ECS use IAM role instead of keys
-    if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(__file__)), "..", ".env")):
+    if settings.AWS_SECRET_ACCESS_KEY or settings.AWS_ACCESS_KEY_ID:
         _s3_client = boto3.client(
             's3',
             region_name=settings.S3_REGION,
