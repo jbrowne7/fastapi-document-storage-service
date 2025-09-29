@@ -49,13 +49,22 @@ jobs:
             --task-definition fastapi-document-storage-service-task \
             --query 'taskDefinition' \
             --output json > task-def.json
+          jq 'del(
+            .taskDefinitionArn,
+            .revision,
+            .status,
+            .requiresAttributes,
+            .compatibilities,
+            .registeredAt,
+            .registeredBy
+          )' task-def.json > clean-task-def.json
 
       - name: Update task definition image
         run: |
           IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
           jq --arg IMAGE "$IMAGE" \
             '.containerDefinitions[0].image = $IMAGE' \
-            task-def.json > new-task-def.json
+            clean-task-def.json > new-task-def.json
 
       - name: Register new task definition
         id: register-task-def
