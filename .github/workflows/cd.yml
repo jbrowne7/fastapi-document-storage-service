@@ -49,6 +49,15 @@ jobs:
             --task-definition fastapi-document-storage-service-task \
             --query 'taskDefinition' \
             --output json > task-def.json
+          jq 'del(
+            .taskDefinitionArn,
+            .revision,
+            .status,
+            .requiresAttributes,
+            .compatibilities,
+            .registeredAt,
+            .registeredBy
+          )' task-def.json > clean-task-def.json
 
       - name: Update task definition image
         run: |
