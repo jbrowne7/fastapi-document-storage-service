@@ -15,8 +15,6 @@ def s3_client():
     global _s3
     if _s3: return _s3
 
-    print(settings.AWS_SECRET_ACCESS_KEY)
-
     # If deploying in ECS use IAM role instead of keys
     if (
         (settings.AWS_SECRET_ACCESS_KEY or settings.AWS_ACCESS_KEY_ID) and 

@@ -3,7 +3,7 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as documents_router
 from app.services.storage import ensure_bucket
 from app.core.config import settings
-import sys
+import sys, os
 
 
 def create_app() -> FastAPI:
@@ -23,6 +23,9 @@ def create_app() -> FastAPI:
         return {"message": "rag-fastapi is running"}
 
     return app
+
+print(f"settings.database_host: {settings.DATABASE_HOST}")
+print(f"os database host: {os.getenv("DATABASE_HOST")}")
 
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
