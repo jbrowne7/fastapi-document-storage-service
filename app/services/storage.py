@@ -1,4 +1,5 @@
 import boto3
+import os
 
 from typing import BinaryIO, Optional
 from pathlib import PurePosixPath
@@ -14,7 +15,27 @@ def s3_client():
     global _s3
     if _s3: return _s3
 
-    _s3_client = boto3.client('s3', region_name=settings.S3_REGION, endpoint_url=settings.S3_ENDPOINT_URL)
+    print(settings.AWS_SECRET_ACCESS_KEY)
+
+    # If deploying in ECS use IAM role instead of keys
+    if (
+        (settings.AWS_SECRET_ACCESS_KEY or settings.AWS_ACCESS_KEY_ID) and 
+        (settings.AWS_SECRET_ACCESS_KEY != "test" and settings.AWS_ACCESS_KEY_ID != "test")
+        ):
+        print("YUP")
+        _s3_client = boto3.client(
+            's3',
+            region_name=settings.S3_REGION,
+            endpoint_url=settings.S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        )
+    else:
+        _s3_client = boto3.client(
+            's3',
+            region_name=settings.S3_REGION,
+            endpoint_url=settings.S3_ENDPOINT_URL,
+        )
     _s3 = _s3_client
     
     return _s3

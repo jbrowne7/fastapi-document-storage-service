@@ -1,52 +1,89 @@
 # rag-fastapi
-Python FastAPI service that ingests documents and answers questions with cited responses using retrieval‑augmented generation (RAG).
+A Python FastAPI service for secure per-user document upload, listing, and deletion, with S3-compatible storage and JWT authentication.
+
+## Contents
+- [Stack](#stack)
+- [API endpoints](#api-endpoints)
+- [Features](#features)
+- [Development plan](#development-plan)
+- [Run locally](#run-locally)
+- [API Testing with Postman](#api-testing-with-postman)
 
 ## Stack
 - Python
 - FastAPI
 - PostgreSQL
-- LLM (Haven't decided which one yet)
+- S3-compatible storage (AWS S3 or LocalStack)
 
 ## API endpoints (MVP)
 - Auth
 	- POST /auth/register — create user
 	- POST /auth/login — get JWT access (and optional refresh)
-	- POST /auth/refresh — refresh access token (if used)
 	- GET  /me — current user (requires Bearer token)
 - Documents
 	- POST /documents/upload — upload file (or presigned flow later)
 	- GET  /documents — list user documents
 	- DELETE /documents/{id} — delete document
-- QA
-	- POST /qa/query — ask question
 - Health
 	- GET /healthz — liveness check
+
+## Features
+- Per-user secure document storage and access control
+- Unique filenames enforced per user to prevent duplicates
+- JWT-based authentication for all endpoints
+- Presigned S3 URLs for secure file downloads
+- CI with LocalStack S3 and Postgres for reliable testing
 
 ## Development plan:
 - Setup repo, envs, project structure, etc
 - Implement basic API auth endpoints
 - Implement document upload
-- Ingestion pipeline: extract text, chunk, embed, and index in a vector store
-- RAG query endpoint: retrieve top-k (per user), generate answer with citations
 - Observability: structured logs, metrics, tracing
-- Security: per-user filtering, size/type limits
 - Tests & CI: unit/integration/E2E + GitHub Actions, pre-commit hooks
-- Deploy: Docker Compose for dev; cloud Postgres + object storage + vector DB
+- Deploy: Docker Compose for dev; cloud Postgres + object storage
 
 ## Run locally
-1. Create a virtual env and install dependencies
+
+> The `.env.example` and `docker-compose.yml` files are provided **only for local development and testing**.  
+> **Do not use these files for production deployments.**  
+> If deploying create your own `.env` and `docker-compose.yml` with secure, production-ready settings.
+
+1. **Copy sample .env file to .env**
+    ```bash
+    cp .env.sample .env
+    ```
+1. **Start dependencies with Docker Compose**
+
+    ```bash
+    docker compose up -d
+    ```
+
+2. **Create a virtual env and install dependencies**
    
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -U pip
+    pip install -r requirements.txt
+    ```
+
+3. **Run database migrations**:
+
+    ```bash
+    alembic upgrade head
+    ```
+
+4. **Start the API**
+
 	```bash
-	python3 -m venv .venv
-	source .venv/bin/activate
-	pip install -U pip
-	pip install -r requirements.txt
+	uvicorn app.main:app --port 8000
 	```
 
-2. Start the API
+5. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) and check `/healthz` or the docs at `/docs`.
 
-	```bash
-	uvicorn app.main:app --reload --port 8000
-	```
+## API Testing with Postman
 
-3. Open http://127.0.0.1:8000 and check `/healthz` or the docs at `/docs`.
+A ready-to-use Postman collection is provided in [`postman/fastapi-docstore.postman_collection.json`](postman/fastapi-docstore.postman_collection.json).
+
+- Import this collection into Postman to try out all API endpoints.
+- Update the environment variables (such as base URL and JWT token) as needed for your setup.

@@ -4,16 +4,13 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+print("Alembic connecting to:", context.config.get_main_option("sqlalchemy.url"))
 
 from app.db import models
 from app.db.base import Base
-import os
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except Exception:
-    pass
+from app.core.config import settings
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,7 +29,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def get_url() -> str:
-    url = os.getenv("DATABASE_URL")
+    url = settings.DATABASE_URL
     if not url:
         raise RuntimeError("DATABASE_URL is not set")
     return url
