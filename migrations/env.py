@@ -8,16 +8,9 @@ print("Alembic connecting to:", context.config.get_main_option("sqlalchemy.url")
 
 from app.db import models
 from app.db.base import Base
-import os
 
 from app.core.config import settings
 
-
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except Exception:
-    pass
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -23,6 +23,5 @@ def create_app() -> FastAPI:
 
     return app
 
-print("DATABASE_PASSWORD:", settings.DATABASE_PASSWORD)
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
