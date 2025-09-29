@@ -1,5 +1,6 @@
 name: Push Docker Image to AWS ECR and Update ECS
 
+
 on:
   push:
     branches:
