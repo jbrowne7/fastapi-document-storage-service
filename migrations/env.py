@@ -10,6 +10,9 @@ from app.db import models
 from app.db.base import Base
 import os
 
+from app.core.config import settings
+
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -33,7 +36,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def get_url() -> str:
-    url = os.getenv("DATABASE_URL")
+    url = settings.DATABASE_URL
     if not url:
         raise RuntimeError("DATABASE_URL is not set")
     return url
