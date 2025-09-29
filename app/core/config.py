@@ -24,8 +24,10 @@ class Settings(BaseSettings):
     DATABASE_NAME: str = Field("fastapi_docstore", description="Database name")
     DATABASE_URL: str = "" #db url is set in constructor
 
+    env_file = ".env" if os.getenv("ENV", "local") == "local" else None
+
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=env_file,
         env_file_encoding="utf-8",
     )
 
