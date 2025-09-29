@@ -1,6 +1,9 @@
 name: Push Docker Image to AWS ECR
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 env:
   AWS_REGION: eu-north-1
@@ -28,7 +31,17 @@ jobs:
       - name: Build, tag, and push image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: fastapi-document-storage-service
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          IMAGE_TAG=${{ github.sha }}
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Update ECS service with new image
+        env:
+          CLUSTER: striking-giraffe-ow0grb
+          SERVICE: fastapi-document-storage-service-task-service-o0buhfaj
+        run: |
+          aws ecs update-service \
+            --cluster $CLUSTER \
+            --service $SERVICE \
+            --force-new-deployment
