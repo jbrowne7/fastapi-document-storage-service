@@ -1,4 +1,5 @@
-name: Push Docker Image to AWS ECR
+name: Push Docker Image to AWS ECR and Update ECS
+
 
 on:
   push:
@@ -14,7 +15,7 @@ env:
   ECR_REPOSITORY: fastapi-document-storage-service
 
 jobs:
-  push-image:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,12 +36,37 @@ jobs:
       - name: Build, tag, and push image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: fastapi-document-storage-service
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      - name: Update ECS service with new image
+
+      - name: Get current task definition
+        id: task-def
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition fastapi-document-storage-service-task \
+            --query 'taskDefinition' \
+            --output json > task-def.json
+
+      - name: Update task definition image
+        run: |
+          IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
+          jq --arg IMAGE "$IMAGE" \
+            '.containerDefinitions[0].image = $IMAGE' \
+            task-def.json > new-task-def.json
+
+      - name: Register new task definition
+        id: register-task-def
+        run: |
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-def.json \
+            --query 'taskDefinition.taskDefinitionArn' \
+            --output text)
+          echo "NEW_TASK_DEF_ARN=$NEW_TASK_DEF_ARN" >> $GITHUB_ENV
+
+      - name: Update ECS service to use new task definition
         env:
           CLUSTER: striking-giraffe-ow0grb
           SERVICE: fastapi-document-storage-service-task-service-o0buhfaj
@@ -48,4 +74,4 @@ jobs:
           aws ecs update-service \
             --cluster $CLUSTER \
             --service $SERVICE \
-            --force-new-deployment
+            --task-definition $NEW_TASK_DEF_ARN
