@@ -25,7 +25,7 @@ def create_app() -> FastAPI:
     return app
 
 print(f"settings.database_host: {settings.DATABASE_HOST}")
-print(f"os database host: {os.getenv("DATABASE_HOST")}")
+# print(f"os database host: {os.getenv("DATABASE_HOST")}")
 
 ensure_bucket(settings.S3_BUCKET)
 app = create_app()
