@@ -24,7 +24,7 @@ def create_app() -> FastAPI:
 
     return app
 
-print(f"settings.database_host: {settings.DATABASE_HOST}")
+print(f"settings.database_host: {settings.DATABASE_URL}")
 print("Done")
 sys.exit(0)
 # print(f"os database host: {os.getenv("DATABASE_HOST")}")

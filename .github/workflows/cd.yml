@@ -1,4 +1,4 @@
-name: Push Docker Image to AWS ECR and Update ECS
+name: CD
 
 
 on:
