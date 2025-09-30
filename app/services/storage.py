@@ -20,7 +20,6 @@ def s3_client():
         (settings.AWS_SECRET_ACCESS_KEY or settings.AWS_ACCESS_KEY_ID) and 
         (settings.AWS_SECRET_ACCESS_KEY != "test" and settings.AWS_ACCESS_KEY_ID != "test")
         ):
-        print("YUP")
         _s3_client = boto3.client(
             's3',
             region_name=settings.S3_REGION,
@@ -32,7 +31,6 @@ def s3_client():
         _s3_client = boto3.client(
             's3',
             region_name=settings.S3_REGION,
-            endpoint_url=settings.S3_ENDPOINT_URL,
         )
     _s3 = _s3_client
     
