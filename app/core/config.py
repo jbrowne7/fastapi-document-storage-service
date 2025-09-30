@@ -33,16 +33,14 @@ class Settings(BaseSettings):
     )
 
     def setDatabaseURL(self):
-        db_password = self.DATABASE_PASSWORD
-        db_user = self.DATABASE_USER
         try:
-            secret_dict = json.loads(db_password)
-            db_password = secret_dict.get("password", db_password)
-            db_user = secret_dict.get("username", db_user)
+            secret_dict = json.loads(self.DATABASE_PASSWORD)
+            self.DATABASE_PASSWORD = secret_dict.get("password")
+            self.DATABASE_USER = secret_dict.get("username")
         except Exception:
             pass
         self.DATABASE_URL = (
-            f"postgresql+psycopg2://{db_user}:{db_password}"
+            f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
             f"@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
         )
 
