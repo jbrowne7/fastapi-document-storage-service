@@ -3,12 +3,11 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.documents import router as documents_router
 from app.services.storage import ensure_bucket
 from app.core.config import settings
-import sys
 
 
 def create_app() -> FastAPI:
 
-    app = FastAPI(title="rag-fastapi")
+    app = FastAPI(title="fastapi-docstore")
 
     # Routers
     app.include_router(auth_router)
@@ -20,7 +19,7 @@ def create_app() -> FastAPI:
 
     @app.get("/")
     def root():
-        return {"message": "rag-fastapi is running"}
+        return {"message": "fastapi-docstore is running"}
 
     return app
 
