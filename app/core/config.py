@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 import sys
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -32,8 +33,16 @@ class Settings(BaseSettings):
     )
 
     def setDatabaseURL(self):
+        db_password = self.DATABASE_PASSWORD
+        db_user = self.DATABASE_USER
+        try:
+            secret_dict = json.loads(db_password)
+            db_password = secret_dict.get("password", db_password)
+            db_user = secret_dict.get("username", db_user)
+        except Exception:
+            pass
         self.DATABASE_URL = (
-            f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}"
+            f"postgresql+psycopg2://{db_user}:{db_password}"
             f"@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
         )
 
