@@ -2,17 +2,51 @@
 A Python FastAPI service for secure per-user document upload, listing, and deletion, with S3-compatible storage and JWT authentication.
 
 ## Contents
+
+- [Features](#features)
+- [Cloud infrastructure diagram](#cloud-infrastructure-diagram)
+- [Live demo](#live-demo)
+  - [How to use](#how-to-use)
+- [Video demo](#video-demo)
 - [Requirements](#requirements)
 - [Run locally](#run-locally)
-- [Live demo](#live-demo)
-- [Video demo](#video-demo)
 - [Stack](#stack)
 - [API endpoints](#api-endpoints)
-- [Features](#features)
 - [Development plan](#development-plan)
 - [API Testing with Postman](#api-testing-with-postman)
 - [Documentation](#documentation)
-- [Cloud infrastructure diagram](#cloud-infrastructure-diagram)
+
+
+## Features
+- Per-user secure document storage and access control
+- Unique filenames enforced per user to prevent duplicates
+- JWT-based authentication for all endpoints
+- Presigned S3 URLs for secure file downloads
+- CI with LocalStack S3, Postgres, and pytest for testing
+- Deployment with AWS
+
+## Cloud infrastructure diagram
+
+This diagram shows the backend cloud infrastructure and how the document storage service operates
+
+![cloud infrastructure diagram](assets/cloud-infrastructure.png)
+
+## Live Demo
+
+Try the service live at:
+**[docstore.jamesbrowne.dev](https://docstore.jamesbrowne.dev)**
+
+### How to Use
+1. Register a new user via `/auth/register`
+2. Log in to get a JWT token via `/auth/login`
+3. Use the token to access document endpoints
+
+## Video Demo
+
+[![FastAPI document storage service video](https://img.youtube.com/vi/dIpiw3SSGp4/0.jpg)](https://jamesbrowne.dev/posts/fastapi-document-storage-service/#demo-video)
+
+Click the image above to watch a demonstration of the document storage API
+
 
 ## Requirements
 
@@ -26,9 +60,17 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 > If deploying create your own `.env` and `docker-compose.yml` with secure, production-ready settings.
 
 1. **Copy sample .env file to .env**
+    
+    **macOS/Linux:**
     ```bash
     cp .env.sample .env
     ```
+    
+    **Windows:**
+    ```cmd
+    copy .env.sample .env
+    ```
+
 2. **Start dependencies with Docker Compose**
 
     ```bash
@@ -37,9 +79,18 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 
 3. **Create a virtual env and install dependencies**
    
+    **macOS/Linux:**
     ```bash
     python3 -m venv .venv
     source .venv/bin/activate
+    pip install -U pip
+    pip install -r requirements.txt
+    ```
+    
+    **Windows:**
+    ```cmd
+    python -m venv .venv
+    .venv\Scripts\activate
     pip install -U pip
     pip install -r requirements.txt
     ```
@@ -90,12 +141,6 @@ curl -X GET https://docstore.jamesbrowne.dev/documents \
   -H "Authorization: Bearer <your_token>"
 ```
 
-## Video Demo
-
-[![FastAPI document storage service video](https://img.youtube.com/vi/dIpiw3SSGp4/0.jpg)](https://youtu.be/dIpiw3SSGp4)
-
-Click the image above to watch a demonstration of the document storage API
-
 ## Stack
 - Python
 - FastAPI
@@ -114,19 +159,12 @@ Click the image above to watch a demonstration of the document storage API
 - Health
 	- GET /healthz — liveness check
 
-## Features
-- Per-user secure document storage and access control
-- Unique filenames enforced per user to prevent duplicates
-- JWT-based authentication for all endpoints
-- Presigned S3 URLs for secure file downloads
-- CI with LocalStack S3 and Postgres for reliable testing
-
 ## Development plan:
 - Setup repo, envs, project structure, etc
 - Implement basic API auth endpoints
 - Implement document upload
 - Observability: structured logs, metrics, tracing
-- Tests & CI: unit/integration/E2E + GitHub Actions, pre-commit hooks
+- Tests & CI: unit tests + GitHub Actions
 - Deploy: Docker Compose for dev; cloud Postgres + object storage
 
 ## API Testing with Postman
@@ -140,9 +178,3 @@ A ready-to-use Postman collection is provided in [`postman/fastapi-docstore.post
 
 Full API documentation is available at:
 [docstore.jamesbrowne.dev/redoc](https://docstore.jamesbrowne.dev/redoc)
-
-## Cloud infrastructure diagram
-
-This diagram shows the backend cloud infrastructure and how the document storage service operates
-
-![cloud infrastructure diagram](assets/cloud-infrastructure.png)
