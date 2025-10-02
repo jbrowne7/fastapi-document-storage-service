@@ -2,6 +2,7 @@
 A Python FastAPI service for secure per-user document upload, listing, and deletion, with S3-compatible storage and JWT authentication.
 
 ## Contents
+
 - [Features](#features)
 - [Cloud infrastructure diagram](#cloud-infrastructure-diagram)
 - [Live demo](#live-demo)
@@ -14,6 +15,7 @@ A Python FastAPI service for secure per-user document upload, listing, and delet
 - [Development plan](#development-plan)
 - [API Testing with Postman](#api-testing-with-postman)
 - [Documentation](#documentation)
+
 
 ## Features
 - Per-user secure document storage and access control
@@ -44,6 +46,7 @@ Try the service live at:
 [![FastAPI document storage service video](https://img.youtube.com/vi/dIpiw3SSGp4/0.jpg)](https://jamesbrowne.dev/posts/fastapi-document-storage-service/#demo-video)
 
 Click the image above to watch a demonstration of the document storage API
+
 
 ## Requirements
 
@@ -106,6 +109,38 @@ Click the image above to watch a demonstration of the document storage API
 
 6. Open [http://127.0.0.1:8000](http://127.0.0.1:8000) and check `/healthz` or the docs at `/docs`.
 
+## Live Demo
+
+Try the service live at:
+**[docstore.jamesbrowne.dev](https://docstore.jamesbrowne.dev)**
+
+### How to Use
+1. Register a new user via `/auth/register`
+2. Log in to get a JWT token via `/auth/login`
+3. Use the token to access document endpoints
+
+### Sample Requests
+
+**Register**
+```bash
+curl -X POST https://docstore.jamesbrowne.dev/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "demo@example.com", "password": "yourpassword"}'
+```
+
+**Login**
+```bash
+curl -X POST https://docstore.jamesbrowne.dev/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "demo@example.com", "password": "yourpassword"}'
+```
+
+**List Documents**
+```bash
+curl -X GET https://docstore.jamesbrowne.dev/documents \
+  -H "Authorization: Bearer <your_token>"
+```
+
 ## Stack
 - Python
 - FastAPI
@@ -129,7 +164,7 @@ Click the image above to watch a demonstration of the document storage API
 - Implement basic API auth endpoints
 - Implement document upload
 - Observability: structured logs, metrics, tracing
-- Tests & CI: unit/integration/E2E + GitHub Actions, pre-commit hooks
+- Tests & CI: unit tests + GitHub Actions
 - Deploy: Docker Compose for dev; cloud Postgres + object storage
 
 ## API Testing with Postman
