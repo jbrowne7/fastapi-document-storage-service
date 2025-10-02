@@ -41,7 +41,7 @@ Try the service live at:
 
 ## Video Demo
 
-[![FastAPI document storage service video](https://img.youtube.com/vi/dIpiw3SSGp4/0.jpg)](https://youtu.be/dIpiw3SSGp4)
+[![FastAPI document storage service video](https://img.youtube.com/vi/dIpiw3SSGp4/0.jpg)](https://jamesbrowne.dev/posts/fastapi-document-storage-service/#demo-video)
 
 Click the image above to watch a demonstration of the document storage API
 
