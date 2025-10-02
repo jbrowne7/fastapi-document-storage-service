@@ -20,7 +20,8 @@
 							"});"
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
@@ -29,7 +30,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
+					"raw": "{\n    \"email\": \"testuser4@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -37,15 +38,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/auth/login",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/auth/login",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"auth",
 						"login"
@@ -62,7 +61,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"full_name\": \"test user\",\n    \"email\": \"testuser@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
+					"raw": "{\n    \"full_name\": \"test user\",\n    \"email\": \"testuser4@example.com\",\n    \"password\": \"SuperSecret123!\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -70,15 +69,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/auth/register",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/auth/register",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"auth",
 						"register"
@@ -95,7 +92,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmNiNWVhNi01MzcyLTRjM2UtOTZhNy0zMzJmNTE5ZWRmNTYiLCJpYXQiOjE3NTkyNzUzMTMsImV4cCI6MTc1OTI3ODkxM30.6Q-aAb02YV5LHZs6B7ZCFvvRwdLT4p3PtiPKAOSHXBs",
 							"type": "string"
 						}
 					]
@@ -103,15 +100,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/auth/me",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/auth/me",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"auth",
 						"me"
@@ -128,7 +123,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmNiNWVhNi01MzcyLTRjM2UtOTZhNy0zMzJmNTE5ZWRmNTYiLCJpYXQiOjE3NTkyNzUzMTMsImV4cCI6MTc1OTI3ODkxM30.6Q-aAb02YV5LHZs6B7ZCFvvRwdLT4p3PtiPKAOSHXBs",
 							"type": "string"
 						}
 					]
@@ -136,15 +131,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/documents/list",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/documents/list",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"documents",
 						"list"
@@ -161,7 +154,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmNiNWVhNi01MzcyLTRjM2UtOTZhNy0zMzJmNTE5ZWRmNTYiLCJpYXQiOjE3NTkyNzUzMTMsImV4cCI6MTc1OTI3ODkxM30.6Q-aAb02YV5LHZs6B7ZCFvvRwdLT4p3PtiPKAOSHXBs",
 							"type": "string"
 						}
 					]
@@ -169,19 +162,17 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:8000/documents/delete/f9bd22da-0cc9-4625-bae8-878602eef237",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/documents/delete/test.txt",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"documents",
 						"delete",
-						"f9bd22da-0cc9-4625-bae8-878602eef237"
+						"test.txt"
 					]
 				}
 			},
@@ -195,7 +186,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YmNiNWVhNi01MzcyLTRjM2UtOTZhNy0zMzJmNTE5ZWRmNTYiLCJpYXQiOjE3NTkyNzUzMTMsImV4cCI6MTc1OTI3ODkxM30.6Q-aAb02YV5LHZs6B7ZCFvvRwdLT4p3PtiPKAOSHXBs",
 							"type": "string"
 						}
 					]
@@ -208,20 +199,18 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": []
+							"src": "/Users/james/Documents/test.txt"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/documents/upload",
-					"protocol": "http",
+					"raw": "https://docstore.jamesbrowne.dev/documents/upload",
+					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"docstore",
+						"jamesbrowne",
+						"dev"
 					],
-					"port": "8000",
 					"path": [
 						"documents",
 						"upload"
@@ -229,6 +218,83 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/healthz",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiN2I1NGI0My1jOTkyLTQyOTItYjNjMy05MzRmNjM5ZWRiOWIiLCJpYXQiOjE3NTY5ODQ0NTAsImV4cCI6MTc1Njk4ODA1MH0.dDH2LYeEDewuX1Sgtk-6S_XoB696COxdeZp-mKxg4vM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "https://docstore.jamesbrowne.dev/healthz",
+					"protocol": "https",
+					"host": [
+						"docstore",
+						"jamesbrowne",
+						"dev"
+					],
+					"path": [
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYjJiNmMwZC1jMDBhLTQ2YzAtYjVmMi01ODU1Njc3MGM1ZjAiLCJpYXQiOjE3NTkyMTY3MjMsImV4cCI6MTc1OTIyMDMyM30.pXCeKZPCg-nnUB3PMtQmlBMEyY3caHBcKc_xL-BAbjY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
